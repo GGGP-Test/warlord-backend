@@ -1,0 +1,43 @@
+# Dependencies
+node_modules/
+package-lock.json
+yarn.lock
+
+# Build output
+dist/
+*.js
+*.js.map
+*.d.ts
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Firebase
+firebase-debug.log
+firebase-functions-debug.log
+.firebase/
+.runtimeconfig.json
+
+# Testing
+coverage/
+.nyc_output/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Emulators
+ui-debug.log
