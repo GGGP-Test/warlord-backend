@@ -1,53 +1,27 @@
-# Cloud Build configuration for WARLORD Backend - 2nd Gen
-# Production-ready Docker build and Cloud Run deployment
-# Uses Artifact Registry with createOnPush enabled
+# Cloud Build configuration for WARLORD Backend
+# Simple approach: Let Cloud Run build and deploy directly
 
 steps:
-  # Step 1: Build the Docker image
-  - name: 'gcr.io/cloud-builders/docker'
-    id: 'build-image'
-    args:
-      - 'build'
-      - '-t'
-      - 'us-central1-docker.pkg.dev/$PROJECT_ID/docker-repo/galactly-backend:latest'
-      - '-t'
-      - 'us-central1-docker.pkg.dev/$PROJECT_ID/docker-repo/galactly-backend:$SHORT_SHA'
-      - '.'
-    waitFor: ['-']
-
-  # Step 2: Push to Artifact Registry
-  - name: 'gcr.io/cloud-builders/docker'
-    id: 'push-image'
-    args:
-      - 'push'
-      - 'us-central1-docker.pkg.dev/$PROJECT_ID/docker-repo/galactly-backend'
-    waitFor: ['build-image']
-
-  # Step 3: Deploy to Cloud Run (2nd Gen)
+  # Deploy directly to Cloud Run - Cloud Run handles the build internally
   - name: 'gcr.io/cloud-builders/gcloud'
-    id: 'deploy-run'
+    id: 'deploy-to-cloud-run'
     args:
       - 'run'
       - 'deploy'
       - 'galactly-backend'
-      - '--image=us-central1-docker.pkg.dev/$PROJECT_ID/docker-repo/galactly-backend:latest'
+      - '--source=.'
       - '--region=us-central1'
       - '--platform=managed'
       - '--generation=2'
       - '--allow-unauthenticated'
       - '--memory=512Mi'
       - '--cpu=1'
-      - '--timeout=300'
-      - '--no-traffic-splitting'
-    waitFor: ['push-image']
+      - '--timeout=3600'
+      - '--quiet'
+    waitFor: ['-']
 
-# Images to be stored in Artifact Registry
-images:
-  - 'us-central1-docker.pkg.dev/$PROJECT_ID/docker-repo/galactly-backend:latest'
-  - 'us-central1-docker.pkg.dev/$PROJECT_ID/docker-repo/galactly-backend:$SHORT_SHA'
-
-# Timeout for the entire build (20 minutes)
-timeout: '1200s'
+# Timeout for the entire build (60 minutes to account for Cloud Run build time)
+timeout: '3600s'
 
 # Build options
 options:
