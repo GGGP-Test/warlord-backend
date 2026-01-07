@@ -1,0 +1,9 @@
+Trigger for clean build after removing unused files.
+
+Removed:
+- src/functions/questionAnswerSubmitted.ts
+- src/services/llm.ts
+
+These files referenced exports from firebase.ts that no longer exist in the minimal setup.
+
+Now build should compile cleanly with no TypeScript errors.
