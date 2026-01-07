@@ -5,8 +5,7 @@
   "main": "functions/index.js",
   "scripts": {
     "start": "node functions/index.js",
-    "dev": "nodemon functions/index.js",
-    "build": "echo 'No TypeScript build needed for this setup'"
+    "dev": "nodemon functions/index.js"
   },
   "keywords": [
     "supplier",
