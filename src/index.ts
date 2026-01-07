@@ -1,5 +1,5 @@
-import express, { Express } from 'express';
-import { questionAnswerSubmitted } from './functions/questionAnswerSubmitted';
+import express, { Express, Request, Response } from 'express';
+import './config/firebase'; // Initialize Firebase on startup
 
 const app: Express = express();
 const PORT = process.env.PORT || 8080;
@@ -8,44 +8,43 @@ const PORT = process.env.PORT || 8080;
 app.use(express.json());
 
 // Health check endpoint (REQUIRED for Cloud Run)
-app.get('/health', (req, res) => {
+app.get('/health', (req: Request, res: Response) => {
   res.status(200).json({
     success: true,
     status: 'healthy',
     timestamp: new Date().toISOString(),
-    service: 'galactly-backend',
+    service: 'warlord-backend',
     version: '1.0.0'
   });
 });
 
 // Root endpoint
-app.get('/', (req, res) => {
+app.get('/', (req: Request, res: Response) => {
   res.status(200).json({
     success: true,
     message: 'WARLORD Backend is running',
     endpoints: {
       health: '/health',
-      qa: '/api/qa'
+      api: '/api'
     }
   });
 });
 
-// Question & Answer endpoint
-app.post('/api/qa', async (req, res) => {
-  try {
-    const result = await questionAnswerSubmitted(req, res);
-    return result;
-  } catch (error) {
-    console.error('Error in /api/qa:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Internal server error'
-    });
-  }
+// Basic API endpoint
+app.get('/api', (req: Request, res: Response) => {
+  res.status(200).json({
+    success: true,
+    message: 'API endpoint',
+    features: [
+      'Firebase Admin integration',
+      'Express server',
+      'Health monitoring'
+    ]
+  });
 });
 
 // 404 handler
-app.use((req, res) => {
+app.use((req: Request, res: Response) => {
   res.status(404).json({
     success: false,
     message: 'Endpoint not found',
@@ -57,6 +56,7 @@ app.use((req, res) => {
 app.listen(PORT, () => {
   console.log(`✅ Server running on port ${PORT}`);
   console.log(`📍 Health check: http://localhost:${PORT}/health`);
+  console.log(`🚀 API: http://localhost:${PORT}/api`);
 });
 
 export { app };
