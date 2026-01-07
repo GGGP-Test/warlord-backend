@@ -1,0 +1,10 @@
+# Build trigger #4 - 2026-01-08 03:37 AM +0330
+# Fixed Firebase initialization to use Application Default Credentials
+# 
+# Changes:
+# - Removed dependency on service-account.json file
+# - Use ADC (Application Default Credentials) from Cloud Run environment
+# - Added proper error handling and logging
+# - Project ID loaded from GCP_PROJECT_ID or GOOGLE_CLOUD_PROJECT env vars
+#
+# This allows the app to start correctly and respond to /health endpoint
