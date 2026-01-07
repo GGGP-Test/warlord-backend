@@ -1,28 +1,22 @@
-# WARLORD Backend - Clean Build 2nd Gen
+# WARLORD Backend - Fix 2: Express Server Added
 
-**Build Date**: 2026-01-08 02:10 AM +0330  
-**Status**: Triggering clean deployment
-**Configuration**: Cloud Run 2nd Gen with proper IAM
+**Build Date**: 2026-01-08 02:16 AM +0330  
+**Status**: Testing health endpoint
+**Action**: Added Express server with /health endpoint
 
-## IAM Setup ✅
-- ✅ Logs Writer role granted
-- ✅ Artifact Registry Writer role granted
-- ✅ Service account: galactly-backend-sa
+## What Was Wrong
+- ❌ index.ts was exporting Cloud Functions only
+- ❌ No Express server listening on port 8080
+- ❌ No /health endpoint
 
-## Cloud Run Security ✅
-- ✅ Ingress: Allow all traffic
-- ✅ Authentication: Allow unauthenticated invocations
-- ✅ Platform: 2nd Gen
+## What's Fixed
+- ✅ Created Express app
+- ✅ Added /health endpoint
+- ✅ Added /api/qa endpoint
+- ✅ Proper error handling
+- ✅ Listening on PORT env variable (8080)
 
-## CloudBuild Configuration ✅
-- ✅ Clean cloudbuild.yaml with 2nd Gen flags
-- ✅ Proper logging enabled
-- ✅ --generation=2 flag
-- ✅ --allow-unauthenticated flag
-
-## Expected Build Steps
-1. Build Docker image (Node.js 18)
-2. Push to Container Registry
-3. Deploy to Cloud Run 2nd Gen
-
-**Watch Cloud Build → History for green build!**
+## Next Steps
+1. Cloud Build will trigger automatically
+2. Check Cloud Build → History
+3. Once green, test: https://galactly-backend-384891834378.us-central1.run.app/health
