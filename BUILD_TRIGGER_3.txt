@@ -1,0 +1,6 @@
+# Trigger build #3 - 2026-01-08
+# Fixed Dockerfile with multi-stage build and TypeScript compilation
+# Changes: Using Node 18 multi-stage build to compile TS to JS
+# outDir: ./dist (configured in tsconfig.json)
+# Removed ts-node from production runtime
+# Now running compiled JavaScript for better performance
