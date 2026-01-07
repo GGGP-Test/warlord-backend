@@ -1,0 +1,10 @@
+# Build trigger #7 - 2026-01-08 03:44 AM +0330
+# Fixed npm dependency installation issue
+# 
+# Changes:
+# - Changed 'npm ci' to 'npm install' in Dockerfile (builder stage)
+# - Reason: package-lock.json is missing from repository
+# - npm ci requires lockfile, npm install works without it
+# - Also updated prod stage to use 'npm install --only=production'
+#
+# This resolves: "The npm ci command can only install with an existing package-lock.json"
