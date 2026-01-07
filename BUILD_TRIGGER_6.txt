@@ -1,0 +1,9 @@
+# Build trigger #6 - 2026-01-08 03:41 AM +0330
+# Fixed Cloud Build machine type compatibility
+# 
+# Changes:
+# - Changed machineType from 'N1_HIGHCPU_8' to 'E2_HIGHCPU_8'
+# - Reason: N1 machines are not available in us-central1 region for Cloud Build
+# - E2 is fully compatible and cost-efficient alternative
+#
+# This resolves: "region does not allow N1 machine types: please use E2 variants"
