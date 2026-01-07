@@ -1,0 +1,10 @@
+# Build trigger #5 - 2026-01-08 03:40 AM +0330
+# Fixed cloudbuild.yaml validation error
+# 
+# Changes:
+# - Removed invalid root-level 'logging' field (was causing build config parse error)
+# - Moved 'logging' to proper location under 'options' section
+# - Fixed Cloud Run deployment step to use 'gcloud run deploy' instead of 'run' builder
+# - Removed unsupported deploy flags
+#
+# This resolves: "failed unmarshalling build config cloudbuild.yaml: unknown field 'logging'"
