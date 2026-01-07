@@ -1,46 +1,24 @@
-# Multi-stage build for Node.js TypeScript app
-# Stage 1: Build
-FROM node:18-alpine AS builder
+# Simple Node.js 18 Docker image for Cloud Run
+FROM node:18-slim
 
-WORKDIR /app
-
-# Copy package files
-COPY package*.json ./
-COPY tsconfig.json ./
-
-# Install all dependencies (including dev for TypeScript compilation)
-RUN npm ci
-
-# Copy source code
-COPY src ./src
-
-# Compile TypeScript to JavaScript
-RUN npm run build
-
-# Stage 2: Runtime
-FROM node:18-alpine
-
+# Set working directory
 WORKDIR /app
 
 # Copy package files
 COPY package*.json ./
 
-# Install only production dependencies
-RUN npm ci --only=production
+# Install dependencies
+RUN npm ci --only=production && npm cache clean --force
 
-# Copy compiled code from builder stage
-COPY --from=builder /app/dist ./dist
+# Copy the entire src directory (already has index.ts compiled if needed)
+COPY . .
 
-# Expose port 8080 (Cloud Run expects this)
+# Expose port 8080
 EXPOSE 8080
 
-# Set environment variable
+# Set environment
 ENV PORT=8080
 ENV NODE_ENV=production
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-  CMD node -e "require('http').get('http://localhost:8080/health', (r) => {if (r.statusCode !== 200) throw new Error(r.statusCode)})"
-
-# Start the server
-CMD ["node", "dist/index.js"]
+# Start the application
+CMD ["node", "--require", "ts-node/register", "src/index.ts"]
