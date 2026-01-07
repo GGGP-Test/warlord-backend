@@ -1,0 +1,12 @@
+# Build trigger #8 - 2026-01-08 03:49 AM +0330
+# Simplified deployment using Cloud Run native source-based deploy
+# 
+# Changes:
+# - Removed manual Docker build and push steps
+# - Using 'gcloud run deploy --source=.' for automatic build and deploy
+# - Cloud Run handles Dockerfile build internally
+# - Eliminates Container Registry push permission issues
+# - Faster feedback loop with single integrated step
+#
+# This resolves: "denied: gcr.io repo does not exist. Creating on push requires permission"
+# Solution: Cloud Run's native source deployment (no intermediate container registry needed)
