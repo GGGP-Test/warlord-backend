@@ -1,0 +1,34 @@
+steps:
+  # Build the Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/warlord-backend'
+      - '.'
+
+  # Push to Container Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'gcr.io/$PROJECT_ID/warlord-backend'
+
+  # Deploy to Cloud Run
+  - name: 'gcr.io/cloud-builders/gke-deploy'
+    args:
+      - 'run'
+      - '-f=.'
+      - '-i=gcr.io/$PROJECT_ID/warlord-backend'
+      - '-o=/workspace/output'
+
+# Alternative: Use Cloud Run deploy directly
+# - name: 'gcr.io/cloud-builders/run'
+#   args:
+#     - 'deploy'
+#     - 'warlord-backend'
+#     - '--image=gcr.io/$PROJECT_ID/warlord-backend'
+#     - '--region=us-central1'
+#     - '--allow-unauthenticated'
+
+images:
+  - 'gcr.io/$PROJECT_ID/warlord-backend'
