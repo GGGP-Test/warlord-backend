@@ -1,0 +1,13 @@
+This file was created to force Cloud Build to trigger a new build.
+
+Timestamp: 2026-01-08 02:50 UTC+3:30
+Purpose: Force webhook to fire and build latest commits
+
+All 5 commits with fresh start changes are on main branch:
+- firebase.ts (minimal)
+- index.ts (Express only)
+- logger.ts (simple logger)
+- .dockerignore (faster builds)
+- FRESH_START.md (feature guide)
+
+This build should pick them all up and build the Docker image.
