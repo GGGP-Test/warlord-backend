@@ -1,5 +1,5 @@
 # Cloud Build configuration for WARLORD Backend - 2nd Gen
-# Properly configured with full logging and IAM support
+# Production-ready Docker build and Cloud Run deployment
 
 steps:
   # Step 1: Build the Docker image
@@ -23,9 +23,10 @@ steps:
     waitFor: ['build-image']
 
   # Step 3: Deploy to Cloud Run (2nd Gen)
-  - name: 'gcr.io/cloud-builders/run'
+  - name: 'gcr.io/cloud-builders/gcloud'
     id: 'deploy-run'
     args:
+      - 'run'
       - 'deploy'
       - 'galactly-backend'
       - '--image=gcr.io/$PROJECT_ID/galactly-backend:latest'
@@ -36,22 +37,18 @@ steps:
       - '--memory=512Mi'
       - '--cpu=1'
       - '--timeout=300'
-      - '--set-cloudsql-instances='
       - '--no-traffic-splitting'
     waitFor: ['push-image']
 
-# Build configuration
+# Container images to be pushed
 images:
   - 'gcr.io/$PROJECT_ID/galactly-backend:latest'
   - 'gcr.io/$PROJECT_ID/galactly-backend:$SHORT_SHA'
 
-# Timeout for the entire build (default is 10 minutes)
+# Timeout for the entire build (20 minutes)
 timeout: '1200s'
 
-# Enable Cloud Logging (proper configuration)
-logging: CLOUD_LOGGING_ONLY
-
-# Options
+# Build options (VALID schema)
 options:
   machineType: 'N1_HIGHCPU_8'
   logging: CLOUD_LOGGING_ONLY
