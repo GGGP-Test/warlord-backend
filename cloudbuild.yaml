@@ -1,5 +1,6 @@
 # Cloud Build configuration for WARLORD Backend - 2nd Gen
 # Production-ready Docker build and Cloud Run deployment
+# Uses Artifact Registry with createOnPush enabled
 
 steps:
   # Step 1: Build the Docker image
@@ -8,18 +9,18 @@ steps:
     args:
       - 'build'
       - '-t'
-      - 'gcr.io/$PROJECT_ID/galactly-backend:latest'
+      - 'us-central1-docker.pkg.dev/$PROJECT_ID/docker-repo/galactly-backend:latest'
       - '-t'
-      - 'gcr.io/$PROJECT_ID/galactly-backend:$SHORT_SHA'
+      - 'us-central1-docker.pkg.dev/$PROJECT_ID/docker-repo/galactly-backend:$SHORT_SHA'
       - '.'
     waitFor: ['-']
 
-  # Step 2: Push to Container Registry
+  # Step 2: Push to Artifact Registry
   - name: 'gcr.io/cloud-builders/docker'
     id: 'push-image'
     args:
       - 'push'
-      - 'gcr.io/$PROJECT_ID/galactly-backend'
+      - 'us-central1-docker.pkg.dev/$PROJECT_ID/docker-repo/galactly-backend'
     waitFor: ['build-image']
 
   # Step 3: Deploy to Cloud Run (2nd Gen)
@@ -29,7 +30,7 @@ steps:
       - 'run'
       - 'deploy'
       - 'galactly-backend'
-      - '--image=gcr.io/$PROJECT_ID/galactly-backend:latest'
+      - '--image=us-central1-docker.pkg.dev/$PROJECT_ID/docker-repo/galactly-backend:latest'
       - '--region=us-central1'
       - '--platform=managed'
       - '--generation=2'
@@ -40,15 +41,15 @@ steps:
       - '--no-traffic-splitting'
     waitFor: ['push-image']
 
-# Container images to be pushed
+# Images to be stored in Artifact Registry
 images:
-  - 'gcr.io/$PROJECT_ID/galactly-backend:latest'
-  - 'gcr.io/$PROJECT_ID/galactly-backend:$SHORT_SHA'
+  - 'us-central1-docker.pkg.dev/$PROJECT_ID/docker-repo/galactly-backend:latest'
+  - 'us-central1-docker.pkg.dev/$PROJECT_ID/docker-repo/galactly-backend:$SHORT_SHA'
 
 # Timeout for the entire build (20 minutes)
 timeout: '1200s'
 
-# Build options - use E2_HIGHCPU_8 (N1 not available in us-central1)
+# Build options
 options:
   machineType: 'E2_HIGHCPU_8'
   logging: CLOUD_LOGGING_ONLY
