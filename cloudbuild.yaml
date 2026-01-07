@@ -6,12 +6,16 @@ steps:
       - '-t'
       - 'gcr.io/$PROJECT_ID/galactly-backend'
       - '.'
+    env:
+      - 'CLOUDSDK_BUILD_NOTIFIER=false'
 
   # Push to Container Registry
   - name: 'gcr.io/cloud-builders/docker'
     args:
       - 'push'
       - 'gcr.io/$PROJECT_ID/galactly-backend'
+    env:
+      - 'CLOUDSDK_BUILD_NOTIFIER=false'
 
   # Deploy to Cloud Run with public access
   - name: 'gcr.io/cloud-builders/run'
@@ -25,6 +29,10 @@ steps:
       - '--memory=512Mi'
       - '--cpu=1'
       - '--timeout=300'
+    env:
+      - 'CLOUDSDK_BUILD_NOTIFIER=false'
 
 images:
   - 'gcr.io/$PROJECT_ID/galactly-backend'
+
+logsBucket: null
